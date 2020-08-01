@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>
+        It looks like the following people are probably in the house:
+    </h1>
+    <ul>
+        {% if not users %}
+        <li>No-one!</li>
+        {% else %}
+            {% for user in users %}
+            <li>{{ user.name }}</li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+{% endblock %}
