@@ -9,7 +9,7 @@ class User(db.Model):
     )
 
     def __repr__(self):
-        return f"<User {self.name}>"
+        return "<User {}>".format(self.name)
 
 
 class Device(db.Model):
@@ -21,5 +21,5 @@ class Device(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
     def __repr__(self):
-        return f"<Device {self.name}>"
+        return "<Device {}>".format(self.name)
 
