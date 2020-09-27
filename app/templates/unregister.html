@@ -4,20 +4,28 @@
     <h1>Unregister your device</h1>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
-        <p>
-            {{ form.name.label }}<br>
-            {{ form.name(size=32) }}
-            {% for error in form.name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.device_name.label }}<br>
-            {{ form.device_name(size=32) }}
-            {% for error in form.device_name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>{{ form.submit() }}</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Select</th>
+                    <th>User</th>
+                    <th>Device</th>
+                    <th>Active</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in form.rows %}
+                <tr>
+                    {{ row.csrf_token }}
+                    {{ row.device_id }}
+                    <td>{{ row.select() }}</td>
+                    <td>{{ user_info[row.device_id.data]['user_name'] }}</td>
+                    <td>{{ user_info[row.device_id.data]['device_name'] }}</td>
+                    <td>{{ user_info[row.device_id.data]['is_active'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {{ form.submit() }}
     </form>
 {% endblock %}

@@ -14,27 +14,27 @@ migrate = Migrate(app, db)
 
 from app import routes, models
 
+RESCAN_INTERVAL_SECONDS = 600
+LOCAL_NETWORK_SEGMENT = "192.168.0.0/24"
+
 
 def scan_local_network():
     from app.nmap import get_mac_address
-    print('Scanning local network')
-    active_mac_addresses = set(get_mac_address('192.168.0.0/24')) 
 
-    print(f"Found MAC addresses: {active_mac_addresses}")
-
+    active_mac_addresses = set(get_mac_address(LOCAL_NETWORK_SEGMENT))
     devices = models.Device.query.all()
 
     for device in devices:
-        print(f"Device mac addr: {device.mac_addr}")
-        print(f"Old is_active: {device.is_active}")
-        device.is_active = (device.mac_addr in active_mac_addresses)
-        print(f"New is_active: {device.is_active}")
+        device.is_active = device.mac_addr in active_mac_addresses
         db.session.add(device)
 
     db.session.commit()
 
+
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=scan_local_network, trigger="interval", seconds=600)
+scheduler.add_job(
+    func=scan_local_network, trigger="interval", seconds=RESCAN_INTERVAL_SECONDS
+)
 scheduler.start()
 
 
